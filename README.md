@@ -124,7 +124,7 @@
 - 微信开发者工具（稳定版）
 - 一个云数据库实例（本项目使用 WorkBuddy 云服务，PostgreSQL + 行级权限）
 
-> **说明**：这是一个「作品 / 技术参考」型仓库，不是 clone 即可运行的模板。原因有两个：① 云端 SDK `@tencent-ai/workbuddy-cloud-sdk` 为托管服务，非公开 npm 包；② 数据库表结构与 RPC 函数需要在实际实例中创建。想完整跑通请见 [配置](#配置) 与 [数据结构](#数据结构)。
+> **说明**：这是一个「作品 / 技术参考」型仓库，不是 clone 即插即用的成品小程序，但门槛不在依赖：云端 SDK 是公开 npm 包（`@tencent-ai/workbuddy-cloud-sdk`，`npm install` 直接可装）。真正的门槛在数据库——5 张表、4 个 RPC 函数和 RLS 策略需要在你自己的实例里创建。建库脚本见 [`_db/schema.sql`](_db/schema.sql)，按「想完整运行」走一遍即可。
 
 ### 只想看代码
 
@@ -137,8 +137,8 @@ cd variety-game-host
 
 ### 想完整运行
 
-1. 在云服务控制台创建数据库，执行 `_db/migration_hardening_20261102.sql` 建立表、约束与 RPC 函数
-2. 执行 `_db/seed_shows.sql` 写入综艺基础数据
+1. 在云服务控制台创建数据库，执行 [`_db/schema.sql`](_db/schema.sql) 建表、索引、RPC 函数与 RLS 策略
+2. 执行 `_db/seed_shows.sql` 写入综艺基础数据（可选；不写也行，入库函数遇到新综艺会自动创建）
 3. 复制凭据文件并填入自己的配置：
 
 ```bash
@@ -185,7 +185,8 @@ module.exports = { publicConfig }
 │   ├── wordbank.js                  本地兜底题库
 │   └── workbuddy-cloud-diagnostics.js  云端调用诊断包装
 └── _db
-    ├── migration_hardening_20261102.sql  表、唯一约束、RPC 函数、RLS 策略
+    ├── schema.sql                        从零建库：5 张表、索引、4 个 RPC、RLS 策略
+    ├── migration_hardening_20261102.sql  对已有库的加固（唯一约束、函数、RLS 收紧）
     ├── seed_shows.sql                    综艺基础数据
     ├── feed_batch_20261110.sql           已核实的期数数据（remote_feed 格式）
     ├── selftest_all_games.js             全部游戏出题回归
@@ -261,10 +262,21 @@ remote_feed(show_name, season, episode_no)
 | 表 | 作用 | 关键字段 |
 |---|---|---|
 | `shows` | 综艺 | `name` |
-| `episodes` | 期数 | `show_id`, `season`, `episode_no`, `title` |
-| `games` | 游戏 | `episode_id`, `name`, `rules`, `tags`, `min_players`, `max_players`, `word_pool`, `scene` |
+| `episodes` | 期数 | `show_id`, `season`, `episode_no`, `title`, `aired_on` |
+| `games` | 游戏 | `episode_id`, `name`, `play_style`, `rules`, `tags`, `min_players`, `max_players`, `need_props`, `word_pool`, `scene` |
 | `remote_feed` | 待入库队列 | `show_name`, `season`, `episode_no`, `payload`, `ingested`, `ingest_error` |
 | `sync_state` | 同步状态 | `id='global'`, `data_version`, `last_sync_at`, `last_result`, `last_error` |
+
+完整 DDL 见 [`_db/schema.sql`](_db/schema.sql)（含索引与 RLS 策略）。索引只有三个，但都是按实际查询路径建的：`games(episode_id)` 支撑目录全量拉取，`episodes(show_id)` 支撑按综艺归组，`remote_feed` 上有一个 `WHERE ingested = false` 的部分索引，让「取下一批待入库」永远走小索引而不是扫全表。
+
+写操作**不给客户端直接权限**。所有写入口都是 `SECURITY DEFINER` 函数，客户端只持有 `EXECUTE`：
+
+| 函数 | 作用 |
+|---|---|
+| `try_claim_sync(p_owner, p_lease)` | 原子抢同步锁，默认 10 分钟租约，超时可被重新抢占 |
+| `ingest_feed_row(p_row_id)` | 单条 feed 原子入库，一条记录一个事务，幂等且毒丸免疫 |
+| `mark_feed_failed(p_row_id, p_error)` | 把坏数据标记跳过，永不阻塞队列 |
+| `release_sync(p_owner, p_bumped, p_result, p_error)` | 解锁 + 更新同步时间 + 版本自增 + 结果留痕，一步完成 |
 
 写入链路是**队列式**的：仓库外的采集任务把核实过的新一期写入 `remote_feed`，小程序在用户打开时顺带消费（每轮最多 2 条，避免长尾阻塞）。这样内容更新和客户端发版完全解耦。
 
