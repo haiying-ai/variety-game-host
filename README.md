@@ -4,6 +4,7 @@
 >
 > A WeChat Mini Program that turns one phone into a party game host — real games from Chinese variety shows, with AI-generated rounds and a host console.
 
+[![CI](https://github.com/haiying-ai/variety-game-host/actions/workflows/selftest.yml/badge.svg?branch=main)](https://github.com/haiying-ai/variety-game-host/actions/workflows/selftest.yml)
 ![Platform](https://img.shields.io/badge/platform-WeChat%20Mini%20Program-07C160?style=flat-square)
 ![Language](https://img.shields.io/badge/language-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)

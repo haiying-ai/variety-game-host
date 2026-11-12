@@ -1,0 +1,30 @@
+name: Selftest
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    name: 题库与页面自测
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 全部游戏数据可解析
+        run: node _db/selftest_all_games.js
+
+      - name: 出题引擎
+        run: node _db/selftest_wordgen.js
+
+      - name: 页面渲染
+        run: node _db/selftest_pages.js
