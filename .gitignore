@@ -1,0 +1,23 @@
+# 依赖
+node_modules/
+miniprogram_npm/
+
+# 云端凭据（务必不要提交）
+utils/cloud.local.js
+
+# 微信开发者工具本地设置
+project.private.config.json
+
+# 运营/上架资料（含发布流程与备案口径，不适合公开）
+_db/注册资料清单.md
+
+# WorkBuddy 平台标识
+.wbapp_*
+
+# 历史演示数据（已下架，仅本地留档）
+_db/_deprecated_demo_seeds/
+
+# 系统与临时文件
+.DS_Store
+Thumbs.db
+*.log

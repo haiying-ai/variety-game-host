@@ -1,0 +1,159 @@
+<view class="page">
+
+  <view class="btn-retry" wx:if="{{loadError && !shows.length}}" hover-class="press" bindtap="refresh">重新加载游戏库</view>
+
+  <!-- 骨架屏（加载中） -->
+  <block wx:if="{{loading}}">
+    <view class="skel-card" wx:for="{{[1, 2, 3]}}" wx:key="*this">
+      <view class="skel-line w40"></view>
+      <view class="skel-line w90"></view>
+      <view class="skel-line w60"></view>
+    </view>
+  </block>
+
+  <block wx:if="{{!loading}}">
+
+  <!-- 顶部轮播：每档综艺最新一期的游戏（固定高度、可左右滑动） -->
+  <view class="bn-wrap" wx:if="{{banners.length}}"
+        bindtouchstart="onBnTouchStart" bindtouchend="onBnTouchEnd">
+    <block wx:for="{{banners}}" wx:for-item="bn" wx:for-index="bIdx" wx:key="key">
+      <view class="bn-card tone-{{bn.toneName}} {{bnDir === 'prev' ? 'anim-prev' : 'anim-next'}}" wx:if="{{bIdx === bnIndex}}">
+        <view class="bn-head">
+          <text class="bn-eyebrow">最新一期</text>
+          <text class="bn-ep">{{bn.epLabel}}</text>
+        </view>
+        <view class="bn-show">{{bn.showName}}</view>
+        <view class="bn-count">共 {{bn.count}} 个游戏</view>
+        <view class="bn-games">
+          <view class="bn-game" wx:for="{{bn.games}}" wx:for-item="g" wx:for-index="gIdx" wx:key="id"
+                hover-class="row-press" catchtap="goGame" data-id="{{g.id}}">
+            <text class="bn-g-idx">{{gIdx + 1}}</text>
+            <text class="bn-g-name">{{g.name}}</text>
+            <text class="bn-g-players">{{g.players}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view class="bn-dots" wx:if="{{banners.length > 1}}">
+      <view class="bn-dot {{bIdx === bnIndex ? 'on' : ''}}"
+            wx:for="{{banners}}" wx:for-index="bIdx" wx:key="key"
+            catchtap="onDot" data-i="{{bIdx}}"></view>
+    </view>
+  </view>
+
+  <view class="hint-text" wx:if="{{loadError && shows.length}}">{{loadError}}</view>
+
+  <!-- 一句话找游戏 -->
+  <view class="search-card">
+    <view class="search-row">
+      <input class="search-input" placeholder="搜索游戏 · 综艺 · 期数" placeholder-class="ph"
+             value="{{query}}" bindinput="onQuery" confirm-type="search" bindconfirm="onSearch" />
+      <view class="search-btn" hover-class="press-deep" bindtap="onSearch">搜</view>
+    </view>
+    <view class="search-chips">
+      <text class="chip" hover-class="press" bindtap="quickSearch" data-q="现在就出发最新一期">现在就出发·最新一期</text>
+      <text class="chip" hover-class="press" bindtap="quickSearch" data-q="现在就出发第4季">现在就出发·第4季</text>
+      <text class="chip" hover-class="press" bindtap="quickSearch" data-q="谁是卧底">谁是卧底</text>
+      <text class="chip" hover-class="press" bindtap="quickSearch" data-q="狼人杀">狼人杀</text>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <block wx:if="{{searchBanner}}">
+    <view class="banner">{{searchBanner}}</view>
+    <view class="card group-card" wx:for="{{locatedGroups}}" wx:for-item="grp" wx:key="name" hover-class="press" bindtap="goGroup" data-name="{{grp.name}}">
+      <view class="g-head">
+        <view class="g-name">{{grp.name}}</view>
+        <text class="g-badge" wx:if="{{grp.variantCount}}">{{grp.variantCount}} 个版本</text>
+      </view>
+      <view class="g-scene" wx:if="{{grp.scene}}">{{grp.scene}}</view>
+      <view class="g-meta">{{grp.variants[0].showName}} · 第{{grp.variants[0].season}}季 · {{grp.variants[0].epTitle}}</view>
+      <view class="g-meta">{{grp.min_players}}-{{grp.max_players}} 人 · {{grp.addedLabel}}</view>
+      <block wx:if="{{grp.open}}">
+        <view class="expand-anim">
+          <view class="variant" wx:for="{{grp.variants}}" wx:for-item="v" wx:key="id" hover-class="press" catchtap="goVariant" data-id="{{v.id}}">
+            <view class="v-src">{{v.showName}} 第{{v.season}}季 · {{v.epTitle}}</view>
+            <view class="v-scene" wx:if="{{v.scene}}">{{v.scene}}</view>
+            <view class="v-go">玩这个版本 ›</view>
+          </view>
+        </view>
+      </block>
+    </view>
+    <view class="hint-text" wx:if="{{!locatedGroups.length}}">没找到，换个说法试试</view>
+  </block>
+
+  <!-- 分类筛选 -->
+  <scroll-view scroll-x class="cat-bar" enhanced show-scrollbar="{{false}}"
+               scroll-into-view="{{catInto}}" scroll-with-animation>
+    <view class="cat {{activeCat === item.value ? 'cat-on' : ''}} {{item.cls ? 'tone-' + item.cls : ''}}"
+          id="{{index === 0 ? 'cat-all' : 'cat-' + index}}"
+          wx:for="{{categories}}" wx:key="value"
+          hover-class="press" bindtap="onCat" data-v="{{item.value}}">
+      <view class="cat-dot" wx:if="{{item.cls}}"></view>{{item.label}}
+    </view>
+  </scroll-view>
+
+  <!-- 筛选/搜索后，一键回到完整列表 -->
+  <view class="back-all" wx:if="{{activeCat !== '全部' || searchBanner}}" hover-class="press" bindtap="resetAll">
+    ‹ 返回全部游戏
+  </view>
+
+  <!-- 分类结果列表（同名游戏已合并） -->
+  <block wx:if="{{activeCat !== '全部'}}">
+    <view class="card group-card" wx:for="{{catGroups}}" wx:for-item="grp" wx:key="name" hover-class="press" bindtap="goGroup" data-name="{{grp.name}}">
+      <view class="g-head">
+        <view class="g-name">{{grp.name}}</view>
+        <text class="g-badge" wx:if="{{grp.variantCount}}">{{grp.variantCount}} 个版本</text>
+      </view>
+      <view class="g-scene" wx:if="{{grp.scene}}">{{grp.scene}}</view>
+      <view class="g-meta">{{grp.variants[0].showName}} · 第{{grp.variants[0].season}}季 · {{grp.variants[0].epTitle}}</view>
+      <view class="g-meta">{{grp.min_players}}-{{grp.max_players}} 人 · {{grp.addedLabel}}</view>
+      <block wx:if="{{grp.open}}">
+        <view class="expand-anim">
+          <view class="variant" wx:for="{{grp.variants}}" wx:for-item="v" wx:key="id" hover-class="press" catchtap="goVariant" data-id="{{v.id}}">
+            <view class="v-src">{{v.showName}} 第{{v.season}}季 · {{v.epTitle}}</view>
+            <view class="v-scene" wx:if="{{v.scene}}">{{v.scene}}</view>
+            <view class="v-go">玩这个版本 ›</view>
+          </view>
+        </view>
+      </block>
+    </view>
+    <view class="hint-text" wx:if="{{!catGroups.length}}">这个分类还没有游戏</view>
+  </block>
+
+  <!-- 全部综艺目录：游戏直接平铺，不用点开 -->
+  <block wx:if="{{activeCat === '全部' && !searchBanner}}">
+    <view class="show-card tone-{{show.toneName}}" style="animation-delay: {{index * 50}}ms" wx:for="{{shows}}" wx:for-item="show" wx:key="id">
+      <view class="show-head" hover-class="press" bindtap="toggleShow" data-id="{{show.id}}">
+        <text class="show-name">{{show.name}}</text>
+        <text class="show-toggle">{{show.open ? '收起' : '展开'}}</text>
+      </view>
+      <block wx:if="{{show.open}}">
+        <view wx:for="{{show.seasons}}" wx:for-item="sea" wx:key="season">
+          <view class="season-head">第 {{sea.season}} 季</view>
+          <view wx:for="{{sea.episodes}}" wx:for-item="ep" wx:key="id">
+            <view class="ep-row">
+              <text class="ep-title">{{ep.title}}</text>
+              <text class="ep-latest" wx:if="{{ep.isLatest}}">最新</text>
+            </view>
+            <view class="game-row" wx:for="{{ep.games}}" wx:for-item="g" wx:key="id"
+                  hover-class="press" bindtap="goGame" data-id="{{g.id}}">
+              <view class="gr-top">
+                <text class="gr-name">{{g.name}}</text>
+                <text class="gr-players">{{g.min_players}}-{{g.max_players}} 人</text>
+              </view>
+              <view class="gr-tags" wx:if="{{g.tagsMeta.length}}">
+                <text class="mini-tag {{t.cls ? 'tone-' + t.cls : ''}}" wx:for="{{g.tagsMeta}}" wx:for-item="t" wx:key="name">{{t.name}}</text>
+              </view>
+              <view class="gr-scene" wx:if="{{g.scene}}">{{g.scene}}</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </block>
+
+  </block>
+
+  <view style="height: 40rpx;"></view>
+</view>

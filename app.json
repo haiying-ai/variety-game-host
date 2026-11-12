@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/game/game",
+    "pages/play/play"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#1A1917",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "综艺游戏助手",
+    "backgroundColor": "#1A1917",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

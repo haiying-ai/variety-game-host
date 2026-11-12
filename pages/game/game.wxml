@@ -1,0 +1,54 @@
+<view class="page">
+
+  <!-- 本期名场面 -->
+  <view class="card scene-card" wx:if="{{game.scene}}">
+    <view class="eyebrow">本期名场面</view>
+    <view class="scene-src">{{game.showName}} · 第{{game.season}}季 · {{game.epTitle}}</view>
+    <view class="scene-text">{{game.scene}}</view>
+  </view>
+
+  <!-- 游戏档案 -->
+  <view class="card">
+    <view class="eyebrow">{{game.showName}} · 第{{game.season}}季 第{{game.episodeNo}}期</view>
+    <view class="game-title">{{game.name}}</view>
+    <view class="game-style">{{game.styleLabel}}</view>
+    <view class="tags">
+      <text class="tag {{tcls[t] ? 'tone-' + tcls[t] : ''}}" wx:for="{{game.tags}}" wx:for-item="t" wx:key="*this">{{tmap[t] || t}}</text>
+    </view>
+    <view class="meta"><text class="meta-k">人数</text>{{game.min_players}} - {{game.max_players}} 人</view>
+    <view class="meta" wx:if="{{game.need_props && game.need_props !== '无'}}"><text class="meta-k">道具</text>{{game.need_props}}</view>
+    <view class="meta" wx:if="{{game.addedLabel}}"><text class="meta-k">入库</text>{{game.addedLabel}}</view>
+  </view>
+
+  <!-- 玩法 -->
+  <view class="card">
+    <view class="section-title">玩法</view>
+    <view class="goal-line">{{game.goal}}</view>
+    <view class="step-item" wx:for="{{game.steps}}" wx:key="*this">
+      <text class="step-no">{{index + 1}}</text>
+      <text class="step-txt">{{item}}</text>
+    </view>
+    <view class="howto-line">{{game.howto}}</view>
+    <view class="content-tip" wx:if="{{game.contentLabel}}">每局随机生成一条「{{game.contentLabel}}」，同一台手机不会重复</view>
+  </view>
+
+  <!-- 开玩前设置 -->
+  <view class="card">
+    <view class="section-title">开玩前设置</view>
+    <view class="stepper-row">
+      <text class="stepper-label">一起玩的人数</text>
+      <view class="stepper">
+        <view class="step-btn" hover-class="press-deep" bindtap="decPlayers">−</view>
+        <text class="step-num">{{players}}</text>
+        <view class="step-btn" hover-class="press-deep" bindtap="incPlayers">＋</view>
+      </view>
+    </view>
+    <view class="role-preview" wx:if="{{rolePreview}}">
+      <text>{{rolePreview}}</text>
+    </view>
+    <view class="host-hint">主持人模式：进游戏后手机全程拿在主持人手里。主持人不参加游戏，负责发身份、带节奏，只有主持人能看身份。</view>
+  </view>
+
+  <view class="btn-main {{canPlay ? '' : 'btn-disabled'}}" hover-class="{{canPlay ? 'press-deep' : ''}}" bindtap="startPlay">{{canPlay ? '生成新一局' : '人数需在 ' + game.min_players + '-' + game.max_players + ' 人之间'}}</view>
+  <view style="height: 40rpx;"></view>
+</view>

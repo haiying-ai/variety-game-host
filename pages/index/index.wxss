@@ -1,0 +1,400 @@
+.page {
+  padding-top: 28rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+/* ===== 顶部轮播：固定高度，游戏行按数量均分，不留空白 ===== */
+.bn-wrap {
+  margin-bottom: 28rpx;
+}
+.bn-card {
+  box-sizing: border-box;
+  height: 400rpx;
+  margin: 0 32rpx;
+  padding: 24rpx 26rpx;
+  background: var(--c-card);
+  /* 右上角一层极淡的综艺归属色晕，让卡面不"死平"，但几乎不增加色彩噪音 */
+  background-image: radial-gradient(120% 74% at 100% 0%, var(--tone-glow, transparent), transparent 62%);
+  border: 1rpx solid var(--c-line);
+  border-radius: var(--r-card);
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.bn-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bn-eyebrow {
+  font-size: var(--fs-xs);
+  color: var(--tone, var(--c-accent));
+  letter-spacing: 3rpx;
+}
+.bn-ep {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-3);
+  max-width: 380rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bn-show {
+  margin-top: 12rpx;
+  font-size: 42rpx;
+  font-weight: bold;
+  letter-spacing: 1rpx;
+  line-height: 1.3;
+  color: var(--c-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bn-count {
+  margin-top: 4rpx;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-3);
+}
+
+/* 游戏行：flex:1 均分剩余高度，1 个也不会留白 */
+.bn-games {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 14rpx;
+}
+.bn-game {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border-top: 1rpx solid var(--c-line);
+  transition: transform 0.16s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.16s ease;
+}
+/* 行级按压：向右轻推 6rpx，比整行缩小更"活" */
+.row-press {
+  transform: translateX(6rpx);
+  opacity: 0.82;
+}
+.bn-game:first-child { border-top: none; }
+.bn-g-idx {
+  width: 40rpx;
+  flex: none;
+  font-size: var(--fs-xs);
+  color: var(--tone, var(--c-ink-3));
+  opacity: 0.82;
+}
+.bn-g-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  font-weight: bold;
+  line-height: 1.4;
+  color: var(--c-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bn-g-players {
+  flex: none;
+  margin-left: 14rpx;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-2);
+  background: var(--c-sub);
+  border-radius: var(--r-pill);
+  padding: 2rpx 14rpx;
+}
+
+.bn-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18rpx;
+}
+.bn-dot {
+  width: 12rpx;
+  height: 4rpx;
+  border-radius: 2rpx;
+  background: var(--c-line);
+  margin: 0 6rpx;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+.bn-dot.on {
+  width: 36rpx;
+  background: var(--c-accent);
+}
+
+.btn-retry {
+  margin: 0 32rpx 24rpx;
+  padding: 22rpx;
+  border-radius: var(--r-card);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-line);
+  color: var(--c-accent);
+  font-size: var(--fs-md);
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ===== 搜索 ===== */
+.search-card {
+  background: var(--c-card);
+  border: 1rpx solid var(--c-line);
+  border-radius: var(--r-card);
+  padding: 20rpx;
+  margin: 0 32rpx 28rpx;
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.05);
+  animation: rise-in 0.34s cubic-bezier(0.22, 0.9, 0.3, 1) 0.04s backwards;
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  background: var(--c-sub);
+  border: 1rpx solid var(--c-line);
+  border-radius: var(--r-inner);
+  padding: 4rpx 4rpx 4rpx 24rpx;
+}
+.search-input {
+  flex: 1;
+  height: 64rpx;
+  font-size: var(--fs-md);
+  color: var(--c-ink);
+}
+.ph { color: var(--c-ink-3); }
+.search-btn {
+  width: 72rpx;
+  height: 64rpx;
+  flex: none;
+  margin-left: 12rpx;
+  border-radius: 10rpx;
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-size: var(--fs-sm);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+.search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+.chip {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-2);
+  background: transparent;
+  border: 1rpx solid var(--c-line);
+  padding: 10rpx 22rpx;
+  border-radius: var(--r-pill);
+  margin: 0 12rpx 8rpx 0;
+  transition: opacity 0.12s ease;
+}
+
+.banner {
+  margin: 0 32rpx 20rpx;
+  padding: 20rpx 24rpx;
+  background: var(--c-sub);
+  border-left: 4rpx solid var(--c-accent);
+  border-radius: var(--r-inner);
+  font-size: var(--fs-sm);
+  color: var(--c-ink-2);
+}
+
+/* ===== 分类 ===== */
+.cat-bar {
+  white-space: nowrap;
+  padding: 0 32rpx;
+  margin-bottom: 20rpx;
+  animation: rise-in 0.34s cubic-bezier(0.22, 0.9, 0.3, 1) 0.08s backwards;
+}
+.cat {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: var(--c-ink-2);
+  font-size: var(--fs-sm);
+  padding: 12rpx 26rpx;
+  border-radius: var(--r-pill);
+  border: 1rpx solid var(--c-line);
+  margin-right: 12rpx;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+/* 分类前的语义色点：8rpx 小圆点，全屏最多 6 个，形成"可选但有秩序"的色彩层次 */
+.cat-dot {
+  display: inline-block;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  flex: none;
+  margin-right: 10rpx;
+  background: var(--tone, var(--c-ink-3));
+  opacity: 0.78;
+}
+.cat-on {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-weight: bold;
+  box-shadow: 0 4rpx 14rpx rgba(233, 177, 94, 0.22);
+  animation: tap-pop 0.24s cubic-bezier(0.3, 1.5, 0.5, 1) backwards;
+}
+.cat-on .cat-dot { background: var(--c-accent-ink); opacity: 0.55; }
+
+.back-all {
+  margin: 0 32rpx 20rpx;
+  padding: 18rpx;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-2);
+  background: var(--c-sub);
+  border-radius: var(--r-inner);
+  transition: opacity 0.12s ease;
+}
+
+/* ===== 合并后的游戏卡 ===== */
+.group-card { padding: 26rpx 28rpx; }
+.g-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.g-name {
+  font-size: var(--fs-xl);
+  font-weight: bold;
+  color: var(--c-ink);
+}
+.g-badge {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-2);
+  background: var(--c-sub);
+  border-radius: var(--r-pill);
+  padding: 2rpx 14rpx;
+}
+.g-scene {
+  margin-top: 12rpx;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--c-ink-2);
+}
+.g-meta {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-3);
+  margin-top: 8rpx;
+}
+
+.variant {
+  margin-top: 16rpx;
+  background: var(--c-sub);
+  border-radius: var(--r-inner);
+  padding: 18rpx 20rpx;
+  transition: opacity 0.12s ease;
+}
+.v-src { font-size: var(--fs-xs); color: var(--c-ink-3); }
+.v-scene { font-size: var(--fs-xs); color: var(--c-ink-2); margin-top: 6rpx; }
+.v-go { font-size: var(--fs-sm); color: var(--c-accent); font-weight: bold; margin-top: 10rpx; }
+
+/* ===== 综艺目录 ===== */
+.show-card {
+  background: var(--c-card);
+  border: 1rpx solid var(--c-line);
+  /* 左侧 3rpx 综艺归属色，作为目录里的唯一彩色锚点 */
+  border-left: 3rpx solid var(--tone, var(--c-line));
+  border-radius: var(--r-card);
+  padding: 24rpx 28rpx 12rpx;
+  margin: 0 32rpx 20rpx;
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.05);
+  animation: rise-in 0.34s cubic-bezier(0.22, 0.9, 0.3, 1) backwards;
+}
+.show-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 0.12s ease;
+}
+.show-name {
+  font-size: var(--fs-xl);
+  font-weight: bold;
+  color: var(--c-ink);
+}
+.show-toggle {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-3);
+}
+
+.season-head {
+  margin-top: 26rpx;
+  font-size: var(--fs-xs);
+  color: var(--tone, var(--c-accent));
+  letter-spacing: 3rpx;
+  opacity: 0.9;
+}
+
+.ep-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0 12rpx;
+  border-bottom: 1rpx solid var(--c-line);
+}
+.ep-title {
+  font-size: var(--fs-md);
+  font-weight: bold;
+  color: var(--c-ink);
+}
+.ep-latest {
+  flex: none;
+  margin-left: 14rpx;
+  font-size: 20rpx;
+  color: var(--c-live);
+  border: 1rpx solid var(--c-live);
+  border-radius: var(--r-pill);
+  padding: 0 10rpx;
+}
+
+.game-row {
+  background: var(--c-sub);
+  border-radius: var(--r-inner);
+  padding: 18rpx 20rpx;
+  margin-top: 12rpx;
+  transition: opacity 0.12s ease;
+}
+.gr-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.gr-name {
+  font-size: var(--fs-md);
+  font-weight: bold;
+  color: var(--c-ink);
+}
+.gr-players {
+  flex: none;
+  margin-left: 14rpx;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-2);
+}
+
+.gr-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8rpx;
+}
+.mini-tag {
+  font-size: 20rpx;
+  color: var(--tone, var(--c-ink-2));
+  background: var(--tone-soft, transparent);
+  border: 1rpx solid var(--tone-line, var(--c-line));
+  border-radius: var(--r-pill);
+  padding: 2rpx 12rpx;
+  margin: 0 8rpx 6rpx 0;
+}
+
+.gr-scene {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-3);
+  margin-top: 6rpx;
+  line-height: 1.6;
+}

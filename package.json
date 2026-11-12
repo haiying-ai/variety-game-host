@@ -1,0 +1,16 @@
+{
+  "name": "variety-game-host",
+  "version": "1.0.0",
+  "description": "综艺游戏助手 - 热门综艺游戏规则与生成器小程序",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haiying-ai/variety-game-host.git"
+  },
+  "homepage": "https://github.com/haiying-ai/variety-game-host#readme",
+  "bugs": {
+    "url": "https://github.com/haiying-ai/variety-game-host/issues"
+  },
+  "dependencies": {
+    "@tencent-ai/workbuddy-cloud-sdk": "^0.1.4-dev.ca27990.202610161713"
+  }
+}

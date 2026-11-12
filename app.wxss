@@ -1,0 +1,264 @@
+page {
+  /* ===== 暖墨单底色：夜间不刺眼，日间户外也读得清 ===== */
+  --c-bg: #1A1917;
+  --c-card: #262220;
+  --c-sub: #322C29;
+  --c-line: #453B33;
+  --c-ink: #F2EBDE;
+  --c-ink-2: #BDB3A2;
+  --c-ink-3: #8F8574;
+  --c-accent: #E9B15E;
+  --c-accent-ink: #191308;
+  --c-live: #E06A50;
+  --c-danger: #D06A52;
+  --c-ok: #8FAE7A;
+
+  /* ===== 辅助色：4 个色相，同一明度层、低饱和，
+     只用于「小面积识别」（标签、综艺归属、序号），不做大面积铺底 ===== */
+  --c-teal: #6FD0A6;   /* 青瓷：分组、配合 */
+  --c-blue: #7FB2E0;   /* 黛青：场地、空间 */
+  --c-clay: #F0937A;   /* 陶土：动作、体力 */
+  --c-plum: #C08FD6;   /* 藕紫：推理、隐藏身份 */
+
+  /* 兼容旧变量名，避免遗漏处样式失效 */
+  --c-brand: #E9B15E;
+  --c-brand-deep: #E9B15E;
+  --c-warm: #322C29;
+  --c-warm-soft: #24201E;
+  --c-grad: #E9B15E;
+  --c-green: #8FAE7A;
+  --c-blue: #7E97B8;
+  --c-purple: #9A8FB8;
+  --c-wolf: #9A8FB8;
+  --c-gold: #E9B15E;
+
+  /* ===== 字号阶梯 ===== */
+  --fs-xs: 22rpx;
+  --fs-sm: 24rpx;
+  --fs-md: 28rpx;
+  --fs-lg: 30rpx;
+  --fs-xl: 34rpx;
+  --fs-2xl: 40rpx;
+  --fs-hero: 64rpx;
+
+  /* ===== 圆角三档 ===== */
+  --r-card: 16rpx;
+  --r-inner: 12rpx;
+  --r-pill: 999rpx;
+
+  /* 底色 + 顶部一层极淡暖光：让整屏"亮起来"，但不影响夜间不刺眼 */
+  background-color: var(--c-bg);
+  background-image: radial-gradient(120% 44% at 50% 0%, rgba(233, 177, 94, 0.07), transparent 72%);
+  background-repeat: no-repeat;
+  color: var(--c-ink);
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+}
+
+/* 卡片：描边 + 顶边 1rpx 内高光（亚克力质感），入场时向上浮现。
+   动画用 backwards 而非 both：结束后把 transform 交还给普通样式，
+   否则会压住 hover-class 的按压缩放。 */
+.card {
+  background: var(--c-card);
+  border: 1rpx solid var(--c-line);
+  border-radius: var(--r-card);
+  padding: 28rpx;
+  margin: 0 32rpx 24rpx;
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.05);
+  animation: rise-in 0.32s cubic-bezier(0.22, 0.9, 0.3, 1) backwards;
+}
+
+/* ===== 色彩语义层：tone-* 只设置变量，由使用处决定用在哪里 =====
+   每个 tone 提供三档：主色（文字/描边）、-soft（同色 12% 透明底）、-glow（8% 晕光） */
+.tone-gold {
+  --tone: #E9B15E;
+  --tone-soft: rgba(233, 177, 94, 0.14);
+  --tone-line: rgba(233, 177, 94, 0.36);
+  --tone-glow: rgba(233, 177, 94, 0.13);
+}
+.tone-teal {
+  --tone: #6FD0A6;
+  --tone-soft: rgba(111, 208, 166, 0.14);
+  --tone-line: rgba(111, 208, 166, 0.34);
+  --tone-glow: rgba(111, 208, 166, 0.12);
+}
+.tone-blue {
+  --tone: #7FB2E0;
+  --tone-soft: rgba(127, 178, 224, 0.14);
+  --tone-line: rgba(127, 178, 224, 0.34);
+  --tone-glow: rgba(127, 178, 224, 0.12);
+}
+.tone-clay {
+  --tone: #F0937A;
+  --tone-soft: rgba(240, 147, 122, 0.14);
+  --tone-line: rgba(240, 147, 122, 0.34);
+  --tone-glow: rgba(240, 147, 122, 0.12);
+}
+.tone-plum {
+  --tone: #C08FD6;
+  --tone-soft: rgba(192, 143, 214, 0.14);
+  --tone-line: rgba(192, 143, 214, 0.34);
+  --tone-glow: rgba(192, 143, 214, 0.12);
+}
+
+/* 标签：按语义取色，底为同色 12%，描边 32%——有色彩但不抢视线 */
+.tag {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  padding: 2rpx 14rpx;
+  border-radius: var(--r-pill);
+  margin-right: 10rpx;
+  margin-top: 8rpx;
+  color: var(--tone, var(--c-ink-2));
+  background: var(--tone-soft, var(--c-sub));
+  border: 1rpx solid var(--tone-line, var(--c-line));
+}
+
+/* 主按钮：暖金实心 + 深字 + 同色柔光（活跃感来源，不用橙红避免廉价） */
+.btn-main {
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+  font-size: var(--fs-lg);
+  font-weight: bold;
+  letter-spacing: 2rpx;
+  border-radius: var(--r-inner);
+  padding: 26rpx 0;
+  text-align: center;
+  margin: 8rpx 32rpx 24rpx;
+  box-shadow: 0 6rpx 20rpx rgba(233, 177, 94, 0.20), inset 0 1rpx 0 rgba(255, 255, 255, 0.28);
+  animation: btn-breathe 3.6s ease-in-out infinite;
+  transition: transform 0.14s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.14s ease;
+}
+.btn-main.btn-disabled {
+  background: var(--c-sub);
+  color: var(--c-ink-3);
+  opacity: 0.7;
+  box-shadow: none;
+  animation: none;
+}
+
+/* 按压反馈：带轻微过冲的弹性，手感"有生命" */
+.press {
+  transform: scale(0.972);
+  opacity: 0.86;
+  transition: transform 0.14s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.14s ease;
+}
+.press-deep {
+  transform: scale(0.945);
+  opacity: 0.76;
+  transition: transform 0.14s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.14s ease;
+}
+
+/* 大字（出题结果、关键词）：弹入 + 同色柔光 */
+.big-word {
+  font-size: var(--fs-hero);
+  font-weight: bold;
+  text-align: center;
+  color: var(--c-accent);
+  letter-spacing: 2rpx;
+  padding: 56rpx 20rpx;
+  line-height: 1.35;
+  text-shadow: 0 0 32rpx rgba(233, 177, 94, 0.28);
+  animation: pop-in 0.4s cubic-bezier(0.22, 1.2, 0.3, 1) both;
+}
+
+/* 辅助说明 */
+.hint-text {
+  color: var(--c-ink-3);
+  font-size: var(--fs-sm);
+  text-align: center;
+  line-height: 1.7;
+  padding: 14rpx 0;
+}
+
+/* 小节标题 */
+.section-title {
+  font-size: var(--fs-sm);
+  font-weight: bold;
+  color: var(--c-accent);
+  letter-spacing: 2rpx;
+  margin-bottom: 18rpx;
+}
+
+/* ===== 骨架屏 ===== */
+.skel-card {
+  background: var(--c-card);
+  border: 1rpx solid var(--c-line);
+  border-radius: var(--r-card);
+  padding: 28rpx;
+  margin: 0 32rpx 24rpx;
+}
+.skel-line {
+  height: 26rpx;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, #2C2724 25%, #403831 50%, #2C2724 75%);
+  background-size: 400% 100%;
+  animation: skel-shine 1.2s ease infinite;
+  margin-bottom: 18rpx;
+}
+.skel-line:last-child { margin-bottom: 0; }
+.skel-line.w40 { width: 40%; }
+.skel-line.w60 { width: 60%; }
+.skel-line.w90 { width: 90%; }
+@keyframes skel-shine {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* 展开动画 */
+.expand-anim {
+  animation: fade-slide 0.22s ease;
+}
+@keyframes fade-slide {
+  from { opacity: 0; transform: translateY(-8rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   动效层：全站共用的五个动效，克制但有"跳动感"
+   —— 只用 transform / opacity，不触发重排，低端机也不卡
+   ============================================================ */
+
+/* 1. 入场浮现：卡片从下方 16rpx 处淡入 */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 2. 弹入：轻微过冲（1.04）后回位，用于出题结果、选中态 */
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.90); }
+  60%  { opacity: 1; transform: scale(1.035); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 3. 轮播换卡：按滑动方向从侧边带位移进入 */
+@keyframes slide-in-r {
+  from { opacity: 0.2; transform: translateX(28rpx); }
+  to   { opacity: 1;   transform: translateX(0); }
+}
+@keyframes slide-in-l {
+  from { opacity: 0.2; transform: translateX(-28rpx); }
+  to   { opacity: 1;   transform: translateX(0); }
+}
+.anim-next { animation: slide-in-r 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+.anim-prev { animation: slide-in-l 0.3s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+
+/* 4. 主按钮缓慢呼吸：光晕在 3.6s 内轻微起伏，不闪烁 */
+@keyframes btn-breathe {
+  0%, 100% { box-shadow: 0 6rpx 20rpx rgba(233, 177, 94, 0.18), inset 0 1rpx 0 rgba(255, 255, 255, 0.28); }
+  50%      { box-shadow: 0 8rpx 28rpx rgba(233, 177, 94, 0.30), inset 0 1rpx 0 rgba(255, 255, 255, 0.34); }
+}
+
+/* 5. 选中态轻微放大：分类切换、圆点激活 */
+@keyframes tap-pop {
+  0%   { transform: scale(0.94); }
+  60%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* 内容切换时重播弹入：tick 奇偶交替两个同名动画，绕开"同元素动画不重播" */
+.pop-a { animation: pop-in 0.36s cubic-bezier(0.22, 1.2, 0.3, 1) both; }
+.pop-b { animation: pop-in 0.36s cubic-bezier(0.22, 1.2, 0.3, 1) 0.01s both; }
+
