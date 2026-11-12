@@ -1,0 +1,46 @@
+name: Bug 报告
+description: 报告一个可复现的问题
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请先搜索已有 Issue，避免重复。
+        安全问题请勿在此提交，见 [SECURITY.md](https://github.com/haiying-ai/variety-game-host/blob/main/SECURITY.md)。
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 问题描述
+      description: 发生了什么？预期是什么？
+      placeholder: 我期望……但实际……
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      placeholder: |
+        1. 进入「……」页面
+        2. 点击「……」
+        3. 看到……
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: 环境信息
+      description: 微信开发者工具版本、基础库版本、真机型号（如涉及）
+      placeholder: |
+        开发者工具: 1.06.x
+        基础库: 3.x.x
+        机型: iPhone 15 / 微信 8.0.x
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或截图
+      description: 请粘贴控制台报错或界面截图；注意先删除数据库连接串、密钥等敏感内容
+      render: shell
+    validations:
+      required: false
